@@ -1,0 +1,11 @@
+.storySolution {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+    width: 100%;
+    padding: 5px;
+}
+
+.textDefault{
+    margin-bottom: 10px;
+}
