@@ -8,8 +8,6 @@ const ChartPenalty = () => {
     const [chartData, setChartData] = useState(false)
     const [listChart, setListChart] = useState(false)
 
-    
-
     function generateListFromArray(arr) {
         console.log(arr)
         
@@ -41,7 +39,6 @@ const ChartPenalty = () => {
         };
     }, []);
 
-        
     // Генерация данных для xAxis
     const penaltyFactors = chartData?.penalty_factors || [];
     const penaltyValues = chartData?.penalty_values || [];
@@ -50,9 +47,21 @@ const ChartPenalty = () => {
     return (
     <Container >
         {chartData ? 
-        <div>
-            {/* <button onClick={()=>{generateListFromArray(xAxisData)}}></button> */}
-            {/* <p>{chartData.name}</p> */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 750 }}>
+        {/* Блок для графика и подписи оси Y */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            {/* Подпись оси Y */}
+            <div
+                style={{
+                    writingMode: 'vertical-rl', // Вертикальная ориентация текста
+                    transform: 'rotate(180deg)', // Разворот текста
+                    marginRight: 10, // Отступ от графика
+                    fontSize: '14px',
+                }}
+            >
+                Значения
+            </div>
+            {/* График */}
             <LineChart
                 xAxis={[{ data: xAxisData }]} // Общие значения X для всех линий
                 series={[
@@ -67,10 +76,14 @@ const ChartPenalty = () => {
                         color: 'red', // Цвет линии
                     },
                 ]}
-                width={750}
+                width={700}
                 height={550}
             />
-        </div> : 
+        </div>
+        {/* Подпись оси X */}
+        <div style={{ marginTop: 10, fontSize: '14px' }}>Итерации</div>
+    </div>
+     : 
         <div>
             Загрузка...
         </div>

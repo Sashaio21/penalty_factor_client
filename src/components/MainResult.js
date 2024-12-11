@@ -7,7 +7,7 @@ export const MainResult = ({solutionData, setOpenModal}) => {
         <div style={{height:"100%"}}>
             <h3>Результат</h3>
             <div style={{display: "flex", flexDirection:"column", justifyContent: "space-between"}}>
-                <Card style={{padding:"15px"}}>
+                <Card style={{padding:"15px"}}> 
                     <p>Значение x1: {solutionData["solution"]["x1"].toFixed(2)}</p>
                     <p>Значение x2: {solutionData["solution"]["x2"].toFixed(2)}</p>
                     <p>Значение функции: {solutionData["solution"]["fun"].toFixed(2)}</p> 

@@ -14,6 +14,8 @@ import moment from 'moment';
 import {CompareMethod} from '../components/CompareMethod';
 // import {IconButton} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import {Typography} from '@mui/material';
+import {CircularProgress} from '@mui/material';
 
 
 
@@ -24,21 +26,22 @@ function Solution() {
   const [dataSolutions, setDataSolutions] = useState([])
 
   const [inputValue, setInputValue] = useState("Новое решение"); // Начальное значение
-
+  const [errNameSolution, setErrNameSolution] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const handleOpen = () => setOpenModal(true)
   const handleCloseModal = () => {setOpenModal(false)}
   const [listDifferences, setListDifferences] = useState([])
+  const [visibleForm, setVisibleForm] = useState(false)
 
 
-  const [inputSolution, setInputSolution] = useState(false)
+  const [inputSolution, setInputSolution] = useState("")
   const {idSolution} = useParams();
 
   const testr = () =>{
-    axios.get(`/solution/get/${idSolution}`)
-    .then((data)=>{
-      setInputSolution(data.data)
-    })
+    // axios.get(`/solution/get/${idSolution}`)
+    // .then((data)=>{
+    //   setInputSolution(data.data)
+    // })
     console.log("retrefgdgdfgdf" ,inputSolution)
   }
 
@@ -56,18 +59,26 @@ function Solution() {
 }
 
   useEffect(()=>{
-    axios.get(`/solution/get/${idSolution}`)
-    .then((data)=>{
-      setInputSolution(data.data)
-    })
     if (window.localStorage.getItem('token')) {
       axios.get('/solution/getall')
       .then((data)=>{
-        
         setDataSolutions(filterObjectsByTemplate(data.data, inputSolution))
         console.log("fffffffffffffffffff",data.data)
         console.log(inputSolution)
       })
+    }
+
+    if (idSolution!="newSolution") {
+      axios.get(`/solution/get/${idSolution}`)
+      .then((data)=>{
+        console.log("idSolution", idSolution)
+        setInputSolution(data.data)
+        setSol(data.data.solution_data)
+        console.log("sol", data.data)
+      }) 
+    }
+    else{
+      setVisibleForm(true)
     }
     // console.log("retrefgdgdfgdf" ,inputSolution)
   },[])
@@ -164,38 +175,70 @@ function Solution() {
         "solution_data" : {...sol}
       }
     }
+
+    if (window.localStorage.getItem('token')) {
+      axios.get('/solution/getall')
+      .then((data)=>{
+        setDataSolutions(filterObjectsByTemplate(data.data, inputSolution))
+        console.log("fffffffffffffffffff",data.data)
+        console.log(inputSolution)
+      })
+    }
     
     axios.post('/solution/add', dataSolut)
     .then((res)=>{
       setOpen(true)
       console.log(res)
+      setErrNameSolution(false)
+    })
+    .catch((err)=>{
+      // console.log(err.response.data.error)
+      setErrNameSolution(err.response.data.error)
     })
   }
   
   return (
     <div>
       <div style={{display: "flex", justifyContent: "space-between"}}>
-        <h2>Входные параметры</h2>
-        <div style={{height:"100%", marginTop:"20px"}}>
-          <Input
-            defaultValue={inputValue}
-            placeholder='Название решения'
-            onChange={handleChange} 
-            style={{
-              marginRight:"20px"
-            }}
-          ></Input>
-          <Button onClick={()=>saveSolution()}>Сохранить результат</Button>
-        </div>        
+        <h2 style={{height:"40px"}}>Входные параметры</h2>
+        {idSolution=="newSolution" ? (
+          <div style={{height:"100%", marginTop:"20px"}}>
+            <Input
+              defaultValue={inputValue}
+              placeholder='Название решения'
+              onChange={handleChange} 
+              style={{
+                marginRight:"20px",
+                border: !errNameSolution.expression == "" ? "1px solid red" : "1px solid #ccc",
+              }}
+            ></Input>
+            <Button onClick={()=>saveSolution()}>Сохранить результат</Button>
+            {errNameSolution ? (
+              <Typography style={{ color: "red", marginTop: "0px", fontSize:"15px" }}>
+              {errNameSolution}
+            </Typography>
+            ):<></>}
+            
+          </div>  
+        ):<i style={{
+          marginTop:"20px",
+          fontSize:"18px"
+        }}
+        >{inputSolution.nameSolution}</i>}      
       </div>
       <div style={{display: "flex", width:"100%", justifyContent: "space-between"}}>
-        <FormSolution setOpenModal={setOpenModal} setDataSolutions={setDataSolutions} solRepare={solRepare} setSolRepare={setSolRepare} sol={sol} inputSolution={inputSolution} setSolution={setSol} setInputSolution={setInputSolution}></FormSolution>
-        
+        {visibleForm || inputSolution!="" ? (
+          <FormSolution setOpenModal={setOpenModal} setDataSolutions={setDataSolutions} solRepare={solRepare} setSolRepare={setSolRepare} sol={sol} inputSolution={inputSolution} setSolution={setSol} setInputSolution={setInputSolution}></FormSolution>
+        ): <></>}
+        <Button onClick={()=>console.log(dataSolutions.length)}>test</Button>
       </div>
       <div style={{display: "flex", flexDirection:"row", width: "100%", justifyContent:"space-between"}}>
         {sol?(<MainResult setOpenModal={setOpenModal} solutionData={sol}></MainResult>):<></>}
         {solRepare? (
-          <div style={{display: "flex", flexDirection:"column", width:"70%"}}>
+          <div style={{
+              display: "flex", 
+              flexDirection:"column", 
+              width:"70%"}}>
             <div style={{display:"flex", width:"100%", justifyContent:"space-between"}}>
               <h3 >Cравнение</h3>
               <div onClick={()=>setSolRepare(false)} style={{display: "flex", cursor: "pointer",flexDirection:"row", alignSelf:"flex-end", justifyContent:"space-between"}}>
@@ -212,12 +255,14 @@ function Solution() {
 
       </div>
       <br></br>
+      
       {sol ? (<CompSolution setOpenModal={setOpenModal} solutionData={sol} inputSolution={inputSolution}/>):<></>}
       <Modal
         open={openModal}
         onClose={handleCloseModal}
       >
-        <Card 
+        {dataSolutions != 0 ? (
+          <Card 
           style={{
           position: "absolute",
           top: "10%",
@@ -232,8 +277,8 @@ function Solution() {
               {dataSolutions.map((obj, index)=>
                 <div style={{width: "100%"}} onClick={()=>selectSolutionForRepare(index)}>
                 <div style={{display:"flex",flexDirection:"row", width:"100%", justifyContent:"space-between"}}>
-                  <div style={{marginBottom: "15px"}}>{obj.nameSolution}</div>
-                  <div style={{marginBottom: "15px"}}>{ moment(obj.createdAt).format('DD.MM.YYYY HH:mm')}</div>
+                  <h4 style={{marginBottom: "15px"}}>{obj.nameSolution}</h4>
+                  <h4 style={{marginBottom: "15px"}}>{ moment(obj.createdAt).format('DD.MM.YYYY HH:mm')}</h4>
                 </div>
                 <div style={{display: "flex", justifyContent:"space-between", marginBottom: "15px"}}>
                   <div>
@@ -273,6 +318,24 @@ function Solution() {
               )
               }
         </Card>
+        ): <Card 
+        style={{
+        position: "absolute",
+        top: "10%",
+        left: "50%",
+        transform: "translate(-50%, 0)",
+        width: "25%",
+        maxHeight: "80vh", // Ограничиваем высоту модального окна
+        overflowY: "auto", // Включаем вертикальную прокрутку
+        padding: "20px",
+      }}
+      >
+        <i style={{
+          marginTop:"20px",
+          fontSize:"18px"
+        }}
+        >Нет подходящий решений для сравнения</i>
+      </Card>}
       </Modal>
         <Snackbar
           open={open}

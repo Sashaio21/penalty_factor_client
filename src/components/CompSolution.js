@@ -5,13 +5,14 @@ import Collapse from "@mui/material"
 
 
 export const CompSolution = ({solutionData, inputSolution, setOpenModal}) => {
+    const baseURLSolution = "https://penalty-method-solution.onrender.com"
       function openNewWindowsWithChat(){
         const data = solutionData;
         console.log("пизда " ,data)
         const newWindow = window.open(
             '/chart', // URL страницы, которую вы хотите открыть
             '_blank', // Открыть в новой вкладке или окне
-            'width=800,height=600' // Параметры окна
+            'width=800,height=660' // Параметры окна
         );
 
         // Проверяем, открылось ли окно
@@ -51,7 +52,7 @@ export const CompSolution = ({solutionData, inputSolution, setOpenModal}) => {
         const constraintType2 = encodeURIComponent(`${data.constraint_type2}`);
         data = `x1_min=-5&x1_max=5&x2_min=-5&x2_max=5&points=${listPoints}&expression=${data.function_type.replace("max", "-").replace("min","")}(${data.expression})&constraint_expr1=${data.constraint_expr1}&constraint_type1=${constraintType1}&constraint_value1=${data.constraint_value1}&constraint_expr2=${data.constraint_expr2}&constraint_type2=${constraintType2}&constraint_value2=${data.constraint_value2}&function_type=${data.function_type}&epsilon=${data.epsilon}&x1_initial=${data.x1_initial}&x2_initial=${data.x2_initial}&method=${data.method}`
         console.log("fdffsd",data)
-        window.open(`http://localhost:5000?${data}`, '_blank', 'width=650,height=730');
+        window.open(`${baseURLSolution}?${data}`, '_blank', 'width=650,height=730');
     }
     const test = () =>{
         setOpenModal(true)

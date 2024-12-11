@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const intance = axios.create({
-    baseURL: 'http://localhost:4444'
+    baseURL: 'https://penalty-factor-server.onrender.com'
+    // baseURL: 'http://localhost:4444'
 });
 
 
