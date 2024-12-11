@@ -212,7 +212,10 @@ function Solution() {
                 border: !errNameSolution.expression == "" ? "1px solid red" : "1px solid #ccc",
               }}
             ></Input>
-            <Button onClick={()=>saveSolution()}>Сохранить результат</Button>
+            {sol ? (
+              <Button onClick={()=>saveSolution()}>Сохранить результат</Button>
+            ):<Button disabled>Сохранить результат</Button>
+            }
             {errNameSolution ? (
               <Typography style={{ color: "red", marginTop: "0px", fontSize:"15px" }}>
               {errNameSolution}

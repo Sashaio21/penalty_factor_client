@@ -11,8 +11,8 @@ import {CircularProgress} from '@mui/material';
 
 export const FormSolution = ({sol , setDataSolutions,solRepare, setSolRepare,inputSolution ,setSolution, setInputSolution, setOpenModal}) => {
   const [visibleLoader, setVisibleLoader] = useState(false)
-  // const baseUrlSolution = "https://penalty-method-solution.onrender.com"
-  const baseUrlSolution = "http://localhost:5000"
+  const baseUrlSolution = "https://penalty-method-solution.onrender.com"
+  // const baseUrlSolution = "http://localhost:5000"
   const  {
     register,
     handleSubmit,
@@ -134,7 +134,7 @@ export const FormSolution = ({sol , setDataSolutions,solRepare, setSolRepare,inp
           <Input
             placeholder='Ограничение 2'
             name='constraint_expr2'
-            defaultValue={inputSolution.constraint_expr1}
+            defaultValue={inputSolution.constraint_expr2}
             {...register('constraint_expr2', { required: "Введите ограничение 1" })}
             style={{border: errors.constraint_expr2 ? "1px solid red" : "1px solid #ccc",}}
           />
