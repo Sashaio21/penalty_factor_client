@@ -4,13 +4,16 @@ import { useForm } from 'react-hook-form';
 import axios from '../axios';
 import { Navigate } from 'react-router-dom';
 import { useState } from 'react';
+import {CircularProgress} from '@mui/material';
 
 function Register() {
   const {register, handleSubmit, formState:{errors}} = useForm();
   const [registerUser, setRegisterUser] = useState()
   const [errorLogin, setErrorLogin] = useState(false)
+  const [visibleLoading, setVisibleLoading] = useState(false)
 
   function RegisterUser(data){
+    setVisibleLoading(true)
     const dataNewUser = axios.post('/auth/signin', data)
       .then(()=>{console.log(dataNewUser)
         setRegisterUser(dataNewUser)
@@ -18,6 +21,9 @@ function Register() {
       .catch((err)=>{
         setErrorLogin(err.response.data.message)
         console.log(err.response.data.message)
+      }).
+      finally(()=>{
+        setVisibleLoading(false)
       })
     
   }
@@ -75,7 +81,14 @@ function Register() {
             />
             {errors.againPassword && <p>{errors.againPassword.message}</p>}
             {errorLogin?(<p style={{alignSelf:"center", color:"red"}}>{errorLogin}</p>):<></>}
-            <Button type='submit'>Зарегистрироваться</Button>
+            {!visibleLoading ? (
+              <Button type='submit'>Зарегистрироваться</Button>
+            ):(
+              <div style={{display:"flex", marginLeft:"30px"}}>
+                <Button type='submit'>Зарегистрироваться</Button>
+                <CircularProgress size={20} style={{marginTop:"10px"}}></CircularProgress>
+              </div>
+            )}
           </div>
         </form>
       </div>

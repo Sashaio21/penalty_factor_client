@@ -1,7 +1,12 @@
 import {  Button, Card } from "@mui/material"
 
 
-export const MainResult = ({solutionData, setOpenModal}) => {
+export const MainResult = ({solutionData, getSolutionsForRepare, setOpenModal}) => {
+
+    const getsDataSolutions = ()=>{
+        getSolutionsForRepare()
+        setOpenModal(true)
+    }
 
     return(
         <div style={{height:"100%"}}>
@@ -14,7 +19,7 @@ export const MainResult = ({solutionData, setOpenModal}) => {
                     <p>Количество итераций: {solutionData["points"].length}</p>    
                     <p>Время расчёта: {solutionData["execution_time"].toFixed(2)} cекунд</p>  
                 </Card>
-                <Button onClick={()=>{setOpenModal(true)}}>Сравнить</Button>
+                <Button  variant="contained" onClick={()=>{getsDataSolutions()}}>Сравнить</Button>
             </div>
         </div>
     )

@@ -16,14 +16,14 @@ import {CompareMethod} from '../components/CompareMethod';
 import CloseIcon from '@mui/icons-material/Close';
 import {Typography} from '@mui/material';
 import {CircularProgress} from '@mui/material';
-
+import {CardActionArea} from '@mui/material';
 
 
 function Solution() {
   const [sol, setSol] = useState()
   const [solRepare, setSolRepare] = useState()
   const [open, setOpen] = useState(false);
-  const [dataSolutions, setDataSolutions] = useState([])
+  const [dataSolutions, setDataSolutions] = useState(["", "", "", "", "", "", "", ""])
 
   const [inputValue, setInputValue] = useState("Новое решение"); // Начальное значение
   const [errNameSolution, setErrNameSolution] = useState(false)
@@ -58,7 +58,7 @@ function Solution() {
     );
 }
 
-  useEffect(()=>{
+  const getSolutionsForRepare =()=>{
     if (window.localStorage.getItem('token')) {
       axios.get('/solution/getall')
       .then((data)=>{
@@ -68,6 +68,10 @@ function Solution() {
       })
     }
 
+  }
+
+  useEffect(()=>{
+    getSolutionsForRepare()
     if (idSolution!="newSolution") {
       axios.get(`/solution/get/${idSolution}`)
       .then((data)=>{
@@ -213,8 +217,8 @@ function Solution() {
               }}
             ></Input>
             {sol ? (
-              <Button onClick={()=>saveSolution()}>Сохранить результат</Button>
-            ):<Button disabled>Сохранить результат</Button>
+              <Button onClick={()=>saveSolution() } variant="contained">Сохранить результат</Button>
+            ):<Button disabled >Сохранить результат</Button>
             }
             {errNameSolution ? (
               <Typography style={{ color: "red", marginTop: "0px", fontSize:"15px" }}>
@@ -231,7 +235,7 @@ function Solution() {
       </div>
       <div style={{display: "flex", width:"100%", justifyContent: "space-between"}}>
         {visibleForm || inputSolution!="" ? (
-          <FormSolution setOpenModal={setOpenModal} setDataSolutions={setDataSolutions} solRepare={solRepare} setSolRepare={setSolRepare} sol={sol} inputSolution={inputSolution} setSolution={setSol} setInputSolution={setInputSolution}></FormSolution>
+          <FormSolution setOpenModal={setOpenModal} Snackbar={Snackbar} setDataSolutions={setDataSolutions} solRepare={solRepare} setSolRepare={setSolRepare} sol={sol} inputSolution={inputSolution} setSolution={setSol} setInputSolution={setInputSolution}></FormSolution>
         ): <></>}
         <Card style={{width:"50%", marginLeft:"10px", height:"100%", padding:"20px"}}>
           <Typography>
@@ -245,12 +249,15 @@ function Solution() {
             Функция: x1**2+x2**2-20*x1-30*x2
           </Typography>
           <Typography>
-            Ограничение: 2*x1+3*x2-13
+            Ограничение 1: 2*x1+3*x2-13
+          </Typography>
+          <Typography>
+            Ограничение 2: 2*x1+3*x2-13
           </Typography>
         </Card>
       </div>
       <div style={{display: "flex", flexDirection:"row", width: "100%", justifyContent:"space-between"}}>
-        {sol?(<MainResult setOpenModal={setOpenModal} solutionData={sol}></MainResult>):<></>}
+        {sol?(<MainResult getSolutionsForRepare={getSolutionsForRepare} setOpenModal={setOpenModal} solutionData={sol}></MainResult>):<></>}
         {solRepare? (
           <div style={{
               display: "flex", 
@@ -292,10 +299,11 @@ function Solution() {
         }}
         >
               {dataSolutions.map((obj, index)=>
+              <CardActionArea>
                 <div style={{width: "100%"}} onClick={()=>selectSolutionForRepare(index)}>
                 <div style={{display:"flex",flexDirection:"row", width:"100%", justifyContent:"space-between"}}>
-                  <h4 style={{marginBottom: "15px"}}>{obj.nameSolution}</h4>
-                  <h4 style={{marginBottom: "15px"}}>{ moment(obj.createdAt).format('DD.MM.YYYY HH:mm')}</h4>
+                  <h3 style={{marginBottom: "15px"}}>{obj.nameSolution}</h3>
+                  <h3 style={{marginBottom: "15px"}}>{ moment(obj.createdAt).format('DD.MM.YYYY HH:mm')}</h3>
                 </div>
                 <div style={{display: "flex", justifyContent:"space-between", marginBottom: "15px"}}>
                   <div>
@@ -332,6 +340,7 @@ function Solution() {
                 </div>
                 <hr></hr>
               </div>
+              </CardActionArea>
               )
               }
         </Card>

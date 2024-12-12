@@ -8,6 +8,13 @@
   pointer-events: none;
 }
 
+.skeleton-container {
+  display: flex;
+  flex-direction: column; /* Расположить элементы вертикально */
+  gap: 10px; /* Контролирует расстояние между элементами */
+}
+
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

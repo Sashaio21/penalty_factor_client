@@ -4,15 +4,18 @@ import { useState } from 'react';
 import { Input, Button } from '@mui/material';
 import { Link, Navigate } from 'react-router-dom';
 import axios from '../axios'
+import {CircularProgress} from '@mui/material';
 
 
 function Login() {
   const {register, handleSubmit, formState:{errors}} = useForm();
   const [token, setToken] = useState()
   const [errorLogin, setErrorLogin] = useState(false)
+  const [visibleLoading, setVisibleLoading] = useState(false)
 
 
   function LoginUser(data){
+    setVisibleLoading(true)
     const dataAuth =  axios.post('/auth/login', data)
       .then((res)=>{
         if (res.data.token) {
@@ -24,6 +27,8 @@ function Login() {
       .catch((err)=>{
         setErrorLogin(err.response.data.message)
         console.log(err.response.data.message)
+      }).finally(()=>{
+        setVisibleLoading(false)
       })
     
   }
@@ -50,7 +55,14 @@ function Login() {
                 type='password'
                 {...register('password')}
               />
-              <Button type='submit'>Войти</Button>
+              {!visibleLoading ? (
+                <Button type='submit'>Войти</Button>
+              ):(
+                <div style={{display:"flex", marginLeft:"92px"}}>
+                  <Button type='submit'>Войти</Button>
+                  <CircularProgress size={20} style={{marginTop:"10px"}}></CircularProgress>
+                </div>
+              )}
             </div>
         </form>
         {errorLogin?(<p style={{alignSelf:"center", color:"red"}}>{errorLogin}</p>):<></>}

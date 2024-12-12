@@ -1,4 +1,4 @@
-import { Card, Input, Select, MenuItem, Button } from '@mui/material';
+import { Card, Input, Select, MenuItem, Button, default as Snackbar } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -6,11 +6,14 @@ import axios from '../axios';
 import axiosGlobal  from 'axios';
 import {Typography} from '@mui/material';
 import {Icon} from '@mui/material';
+// import Snackbar from '@material-ui/core/Snackbar';
 import {CircularProgress} from '@mui/material';
+import {Alert} from '@mui/material';
 
 
-export const FormSolution = ({sol , setDataSolutions,solRepare, setSolRepare,inputSolution ,setSolution, setInputSolution, setOpenModal}) => {
+export const FormSolution = ({sol , Snackbar,setDataSolutions,solRepare, setSolRepare,inputSolution ,setSolution, setInputSolution, setOpenModal}) => {
   const [visibleLoader, setVisibleLoader] = useState(false)
+  const [open, setOpen] = useState(false);
   const baseUrlSolution = "https://penalty-method-solution.onrender.com"
   // const baseUrlSolution = "http://localhost:5000"
   const  {
@@ -20,7 +23,6 @@ export const FormSolution = ({sol , setDataSolutions,solRepare, setSolRepare,inp
   } = useForm();
 
     useEffect(()=>{
-
       console.log("hui", inputSolution)
     },[])
 
@@ -67,6 +69,10 @@ export const FormSolution = ({sol , setDataSolutions,solRepare, setSolRepare,inp
           );
       }
 
+    const handleClose = () => {
+      setOpen(false)
+    };
+
 
     const clickk = (data) =>{
       setVisibleLoader(true)
@@ -78,6 +84,12 @@ export const FormSolution = ({sol , setDataSolutions,solRepare, setSolRepare,inp
       axiosGlobal.get(`${baseUrlSolution}/solution-data?${data}`)
         .then((res)=>{
           setSolution(res.data)
+          setVisibleLoader(false)
+        }).
+        catch((err)=>{
+          console.log(err)
+          setOpen(true)
+        }).finally(()=>{
           setVisibleLoader(false)
         })
       axios.get('/solution/getall')
@@ -214,7 +226,7 @@ export const FormSolution = ({sol , setDataSolutions,solRepare, setSolRepare,inp
           </div>    
           <br/>
           <div style={{display: "flex", }}>
-            <Button className='test' type='submit' >Рассчитать</Button>
+            <Button variant="contained" className='test' type='submit' >Рассчитать</Button>
             {visibleLoader ? (
               <CircularProgress 
               style={{
@@ -230,6 +242,17 @@ export const FormSolution = ({sol , setDataSolutions,solRepare, setSolRepare,inp
           </Typography>
         )}
         </form>
+        
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert
+          onClose={handleClose}
+          severity="error"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          Произошла ошибка на сервере. Обновите страницу и попробуйте ещё раз
+        </Alert>
+      </Snackbar>
       </Card>
     )
 }

@@ -3,18 +3,23 @@ import './styleMain.css'
 import { Routes, Route, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import { Card, Input, Select, MenuItem, Button } from '@mui/material';
+import { Card, Input, Select, MenuItem, Button, Alert} from '@mui/material';
 import { CompSolution } from '../components/CompSolution';
 import { FormSolution } from '../components/FormSolution';
 import axios from '../axios';
 import moment from 'moment';
 import { Navigate } from 'react-router-dom';
+import {Snackbar} from '@mui/material';
+import {Skeleton} from '@mui/material';
 
 
 function Home() {
   const [sol, setSol] = useState()
   const [inputSolution, setInputSolution] = useState("")
-  const [dataSolutions, setDataSolutions] = useState([])
+  const [dataSolutions, setDataSolutions] = useState(["", "", "", "", "",""])
+  const [errorListSol, setErrorListSol] = useState(false)
+  const [openErr, setOpenErr] = useState(false);
+
 
   
   useEffect(()=>{
@@ -23,6 +28,8 @@ function Home() {
         .then((data)=>{
           setDataSolutions(data.data)
           console.log(data.data)
+        }).catch((error)=>{
+          setOpenErr(true)
         })
       }
   },[])
@@ -39,6 +46,9 @@ function Home() {
     return signs[userSign]
   }
 
+  const handleCloseErr = () => {
+    setOpenErr(false)
+  };
   
   const methods = {
     "1":"Квадратичный штраф",
@@ -52,8 +62,18 @@ function Home() {
 
   return (
     <div>
-      <Link to={'/solution/newSolution'} style={{alignSelf: "flex-end"}}><Button>Создать расчёт</Button></Link>
-      {dataSolutions.map((obj)=>
+      <Link to={'/solution/newSolution'} style={{alignSelf: "flex-end"}}><Button  variant="contained">Создать расчёт</Button></Link>
+      {dataSolutions[0] === "" ? (
+        <div className='storySolution'>
+          {dataSolutions.map((obj) => (
+            <div style={{width:"100%" , height:"385px"}}>
+              <Skeleton style={{width:"100%",height:"550px",marginTop:"-90px", padding:"0px"}} key={obj._id}></Skeleton>
+            </div>
+
+        ))}
+        </div>
+      ) : (
+        dataSolutions.map((obj)=>
           <Card className='storySolution'>
             <div style={{display:"flex",flexDirection:"row", width:"100%", justifyContent:"space-between"}}>
               <h4 style={{marginBottom: "15px"}}>{obj.nameSolution}</h4>
@@ -113,8 +133,21 @@ function Home() {
             </div>
             <Link to={`/solution/${obj._id}`} style={{ alignSelf: "flex-end"}}><Button style={{width: "150px", marginBottom: "10px"}} >Подробнее</Button></Link>
           </Card>
+          
       )
-      }
+      )}
+
+    
+      <Snackbar open={openErr} autoHideDuration={6000} onClose={handleCloseErr}>
+        <Alert
+          onClose={handleCloseErr}
+          severity="error"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          Произошла ошибка на сервере{"\n"}Перезагрузите страницу
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
