@@ -44,7 +44,7 @@ function Header(){
                     <Link to={'/login'}><Button>Вход</Button></Link>
                     <Link to={'/register'}><Button>Регистрация</Button></Link>
                 </div>
-            </div> : 
+            </div> :  
             <div className='header'>
                 <Link to={'/'}>На главную</Link>
                 <div className='userIU'>
