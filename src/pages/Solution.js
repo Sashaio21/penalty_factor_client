@@ -233,7 +233,21 @@ function Solution() {
         {visibleForm || inputSolution!="" ? (
           <FormSolution setOpenModal={setOpenModal} setDataSolutions={setDataSolutions} solRepare={solRepare} setSolRepare={setSolRepare} sol={sol} inputSolution={inputSolution} setSolution={setSol} setInputSolution={setInputSolution}></FormSolution>
         ): <></>}
-        <Button onClick={()=>console.log(dataSolutions.length)}>test</Button>
+        <Card style={{width:"50%", marginLeft:"10px", height:"100%", padding:"20px"}}>
+          <Typography>
+            Все переменные выражаются через x
+          </Typography>
+          <Typography>
+            Все математические операции выражаются через общепринятые символы +, -, *, /, **
+          </Typography>
+          <i>Пример:</i>
+          <Typography>
+            Функция: x1**2+x2**2-20*x1-30*x2
+          </Typography>
+          <Typography>
+            Ограничение: 2*x1+3*x2-13
+          </Typography>
+        </Card>
       </div>
       <div style={{display: "flex", flexDirection:"row", width: "100%", justifyContent:"space-between"}}>
         {sol?(<MainResult setOpenModal={setOpenModal} solutionData={sol}></MainResult>):<></>}

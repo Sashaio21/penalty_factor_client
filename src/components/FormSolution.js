@@ -107,6 +107,7 @@ export const FormSolution = ({sol , setDataSolutions,solRepare, setSolRepare,inp
               <MenuItem value="min">min</MenuItem>
             </Select>
           </div>
+
           <br/>
           <Input
             placeholder='Ограничение 1'
