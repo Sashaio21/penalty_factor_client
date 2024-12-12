@@ -67,7 +67,7 @@ function Login() {
         </form>
         {errorLogin?(<p style={{alignSelf:"center", color:"red"}}>{errorLogin}</p>):<></>}
         <p style={{alignSelf:"center"}}>Нет аккаунт?</p>
-        <Link to={'/register'} style={{alignSelf:"center"}}><Button>Регистрация</Button></Link>
+        <Link to={'/register'} style={{alignSelf:"center"}}><Button>Зарегистрироваться</Button></Link>
       </div>
     </div>
   );

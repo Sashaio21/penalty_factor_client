@@ -10,7 +10,7 @@ import Typography from '@mui/material';
 function Header(){
     const [change, setChange] = useState(false)
     const [token, setToken] = useState(false)
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState(false)
 
     useEffect(()=>{
         console.log("Header")
@@ -18,26 +18,26 @@ function Header(){
         if (window.localStorage.getItem('token')) {
             axios.get('/auth/me')
             .then((data)=>{
+                setChange(true)
                 setUser(data.data)
                 console.log(data.data)
             }) 
         }
-    },[change])
+    },[window.localStorage.getItem('token')])
+    
 
     function exitAccaunt(){
-        setChange(true)
+        // 
         if (window.confirm("Вы хотите выйти?")) {
             window.localStorage.removeItem('token');
             setChange(false)
+            setUser(false)
         }
     }
-
-    
-
     
     return (
         <div className="App-header ">
-            {!token ? 
+            {!change ? 
             <div className='header'>
                 <Link to={'/'}>На главную</Link>
                 <div className='userIU'>
@@ -49,7 +49,7 @@ function Header(){
                 <Link to={'/'}>На главную</Link>
                 <div className='userIU'>
                     <p style={{fontSize: "18px", alignSelf:"flex-start"}}>{user.firstName} {user.name}</p>
-                    <Link to={'/login'} onClick={()=>exitAccaunt()}><Button>Выйти</Button></Link>
+                    <Link to={'/login'} style={{marginTop:"12px", marginLeft:"20px"}} onClick={()=>exitAccaunt()}><Button>Выйти</Button></Link>
                 </div>
             </div>
             }
