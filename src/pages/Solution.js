@@ -252,7 +252,7 @@ function Solution() {
             Ограничение 1: 2*x1+3*x2-13
           </Typography>
           <Typography>
-            Ограничение 2: 2*x1+3*x2-13
+            Ограничение 2: 2*x1+x2-10
           </Typography>
         </Card>
       </div>

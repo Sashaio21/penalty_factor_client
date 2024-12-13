@@ -8,6 +8,11 @@
   pointer-events: none;
 }
 
+html {
+  overflow-x: scroll; /* Всегда отображает место для полосы прокрутки */
+}
+
+
 .skeleton-container {
   display: flex;
   flex-direction: column; /* Расположить элементы вертикально */

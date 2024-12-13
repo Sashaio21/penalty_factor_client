@@ -114,10 +114,29 @@ export const FormSolution = ({sol , Snackbar,setDataSolutions,solRepare, setSolR
               {...register('expression', { required: "Введите функцию" })}
               style={{border: errors.expression ? "1px solid red" : "1px solid #ccc",}}
             />
-            <Select id="fruits" name="function_type" {...register('function_type', { required: "Выберите тип функции" })} defaultValue={inputSolution.function_type} {...register('function_type')} style={{border: errors.function_type ? "1px solid red" : "1px solid #ccc", width: "100px", height: "30px"}}>
+            <Select
+              id="fruits"
+              name="function_type"
+              {...register('function_type', { required: "Выберите тип функции" })}
+              defaultValue={inputSolution.function_type}
+              style={{
+                border: errors.function_type ? "1px solid red" : "1px solid #ccc",
+                width: "100px",
+                height: "30px",
+              }}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 150, // Максимальная высота выпадающего списка
+                    width: 100, // Ширина совпадает с шириной <Select>
+                  },
+                },
+              }}
+            >
               <MenuItem value="max">max</MenuItem>
               <MenuItem value="min">min</MenuItem>
             </Select>
+
           </div>
 
           <br/>
